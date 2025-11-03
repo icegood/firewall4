@@ -5,6 +5,8 @@ config defaults
 	option forward		REJECT
 # Uncomment this line to disable ipv6 rules
 #	option disable_ipv6	1
+	option tcp_reject_code tcp-reset
+	option any_reject_code port-unreachable
 
 config zone
 	option name		lan

@@ -70,16 +70,18 @@
 		rule.ipset.invert ? ' !=' : ''
 	}} @{{ rule.ipset.name }} {%+ endif -%}
 {%+ if (rule.log && rule.log_limit): -%}
-	limit rate {{ rule.log_limit.rate }}/{{ rule.log_limit.unit }} log prefix {{ fw4.quote(rule.log, true) }}
+	limit rate {{ rule.log_limit.rate }}/{{ rule.log_limit.unit }} \
+	log prefix {{ fw4.quote(rule.log, true) }} group {{ rule.log_group }}
 		{%+ include("rule.uc", { fw4, zone, rule: { ...rule, log: 0 } }) %}
 {%+ elif (rule.log && zone?.log_limit): -%}
-	limit name "{{ zone.name }}.log_limit" log prefix {{ fw4.quote(rule.log, true) }}
+	limit name "{{ zone.name }}.log_limit" \
+	log prefix {{ fw4.quote(rule.log, true) }} group {{ rule.log_group }}
 		{%+ include("rule.uc", { fw4, zone, rule: { ...rule, log: 0 } }) %}
 {%+ else -%}
 {%+  if (rule.counter): -%}
 	counter {%+ endif -%}
 {%+  if (rule.log): -%}
-	log prefix {{ fw4.quote(rule.log, true) }} {%+ endif -%}
+	log prefix {{ fw4.quote(rule.log, true) }} group {{ rule.log_group }} {%+ endif -%}
 {%+  if (rule.target == "mark"): -%}
 	meta mark set {{
 		(rule.set_xmark.mask == 0xFFFFFFFF)

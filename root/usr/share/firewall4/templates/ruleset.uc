@@ -252,7 +252,7 @@ table inet fw4 {
 		jump {{ zone.forward }}_to_{{ zone.name }}
 {%  if (fw4.forward_policy() != "accept" && (zone.log & 1)): %}
 		{%+ if (zone.log_limit): %}limit name "{{ zone.name }}.log_limit" {%+ endif -%}
-		log prefix "{{ fw4.forward_policy() }} {{ zone.name }} forward: "
+		log prefix "{{ fw4.forward_policy() }} {{ zone.name }} forward: " group {{ zone.log_group }}
 {%  endif %}
 	}
 

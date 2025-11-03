@@ -2013,6 +2013,7 @@ return {
 			custom_chains: [ "bool", null, UNSUPPORTED ],
 
 			log: [ "int" ],
+			log_group: [ "int", 0 ],
 			log_limit: [ "limit" ],
 
 			auto_helper: [ "bool", "1" ],
@@ -2340,6 +2341,7 @@ return {
 
 			counter: [ "bool", "1" ],
 			log: [ "string" ],
+			log_group: [ "int", 0 ],
 			log_limit: [ "limit" ],
 
 			target: [ "target" ]
@@ -2657,6 +2659,7 @@ return {
 
 			counter: [ "bool", "1" ],
 			log: [ "string" ],
+			log_group: [ "int", 0 ],
 			log_limit: [ "limit" ],
 
 			target: [ "target", "dnat" ]
@@ -3058,6 +3061,8 @@ return {
 
 			counter: [ "bool", "1" ],
 			log: [ "string" ],
+			log_group: [ "int", 0 ],
+			log_limit: [ "limit" ],
 
 			target: [ "target", "masquerade" ]
 		});

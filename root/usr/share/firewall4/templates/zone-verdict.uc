@@ -2,13 +2,14 @@
 	meta nfproto {{ fw4.nfproto(rule.family) }} {%+ endif -%}
 {%+ include("zone-match.uc", { egress, rule }) -%}
 {%+ if (verdict != "accept" && (zone.log & 1) && zone.log_limit): -%}
-	limit name "{{ zone.name }}.log_limit" log prefix "{{ verdict }} {{ zone.name }} {{ egress ? "out" : "in" }}: "
+	limit name "{{ zone.name }}.log_limit" \
+	log prefix "{{ verdict }} {{ zone.name }} {{ egress ? "out" : "in" }}: " group {{ zone.log_group }}
 		{%+ include("zone-verdict.uc", { fw4, zone: { ...zone, log: 0 }, rule, egress, verdict }) %}
 {%+ else -%}
 {%+  if (zone.counter): -%}
 	counter {%+ endif -%}
 {%+  if (verdict != "accept" && (zone.log & 1)): -%}
-	log prefix "{{ verdict }} {{ zone.name }} {{ egress ? "out" : "in" }}: " {%+ endif -%}
+	log prefix "{{ verdict }} {{ zone.name }} {{ egress ? "out" : "in" }}: " group {{ zone.log_group }} {%+ endif -%}
 {%   if (verdict == "reject"): -%}
 	jump handle_reject comment "!fw4: reject {{ zone.name }} {{ fw4.nfproto(rule.family, true) }} traffic"
 {%   else -%}

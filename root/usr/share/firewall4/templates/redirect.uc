@@ -62,16 +62,18 @@
 		redirect.ipset.invert ? ' !=' : ''
 	}} @{{ redirect.ipset.name }} {%+ endif -%}
 {%+ if (redirect.log && redirect.log_limit): -%}
-	limit rate {{ redirect.log_limit.rate }}/{{ redirect.log_limit.unit }} log prefix {{ fw4.quote(redirect.log, true) }}
+	limit rate {{ redirect.log_limit.rate }}/{{ redirect.log_limit.unit }} \
+		log prefix {{ fw4.quote(redirect.log, true) }} group {{ redirect.log_group }}
 		{%+ include("redirect.uc", { fw4, zone, redirect: { ...redirect, log: 0 } }) %}
 {%+ elif (redirect.log && zone?.log_limit): -%}
-	limit name "{{ zone.name }}.log_limit" log prefix {{ fw4.quote(redirect.log, true) }}
+	limit name "{{ zone.name }}.log_limit" \
+		log prefix {{ fw4.quote(redirect.log, true) }} group {{ redirect.log_group }}
 		{%+ include("redirect.uc", { fw4, zone, redirect: { ...redirect, log: 0 } }) %}
 {%+ else -%}
 {%+  if (redirect.counter): -%}
 	counter {%+ endif -%}
 {%+  if (redirect.log): -%}
-	log prefix {{ fw4.quote(redirect.log, true) }} {%+ endif -%}
+	log prefix {{ fw4.quote(redirect.log, true) }} group {{ redirect.log_group }} {%+ endif -%}
 {%   if (redirect.target == "redirect"): -%}
 	redirect{% if (redirect.rport): %} to {{ fw4.port(redirect.rport) }}{% endif %}
 {%-  elif (redirect.target == "accept" || redirect.target == "masquerade"): -%}
