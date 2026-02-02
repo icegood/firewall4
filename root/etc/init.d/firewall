@@ -22,7 +22,7 @@ stop_service() {
 }
 
 reload_service() {
-	fw4 reload
+	debounce_action firewall 15 fw4 reload
 }
 
 boot() {
